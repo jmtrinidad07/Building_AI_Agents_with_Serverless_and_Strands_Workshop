@@ -1,0 +1,38 @@
+# Model files and weights
+*.bin
+*.pt
+*.pth
+*.onnx
+*.tflite
+*.h5
+*.hdf5
+*.pb
+*.ckpt
+*.safetensors
+
+# Cache and temporary files
+*.cache
+__pycache__/
+*.pyc
+
+# Model logs and metrics
+logs/
+runs/
+tensorboard/
+
+# Environment-specific files
+.env
+.env.local
+
+# Large datasets
+data/
+datasets/
+raw/
+
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/*.tfstate
+terraform/*.tfstate.*
+# Terraform tmp directory
+terraform/tmp/

@@ -1,0 +1,10 @@
+#!/bin/bash
+echo "🚀 Starting AI Agents Workshop Environment..."
+echo "📁 Current directory: $(pwd)"
+echo "🐍 Python version: $(python3 --version)"
+echo "📦 Node.js version: $(node --version)"
+echo "🏗️  Terraform version: $(terraform --version | head -1)"
+echo "☁️  AWS CLI version: $(aws --version)"
+echo ""
+echo "✅ Environment ready! Follow the workshop instructions to get started."
+echo "💡 Tip: Run 'source .venv/bin/activate' to activate the Python virtual environment"
