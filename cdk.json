@@ -1,5 +1,7 @@
 {
   "app": "node bin/strands-agent-on-lambda.js",
+  "toolkitStackName": "StrandsAgentCDKToolkit",
+  "@aws-cdk/core:bootstrapQualifier": "strnds24",
   "watch": {
     "include": [
       "**"
@@ -15,6 +17,7 @@
     ]
   },
   "context": {
+    "@aws-cdk/core:bootstrapQualifier": "strnds24",
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
     "@aws-cdk/core:checkSecretUsage": true,
     "@aws-cdk/core:target-partitions": [

@@ -1,5 +1,5 @@
 locals {
-  fn_architecture      = "arm64"
+  fn_architecture      = "x86_64"
   jwt_signature_secret = "jwt-signature-secret"
 }
 

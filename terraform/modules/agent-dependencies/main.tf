@@ -19,8 +19,8 @@ data "local_file" "dependencies_layer_zip" {
 
 resource "aws_lambda_layer_version" "dependencies_layer" {
   layer_name          = "travel-agent-dependencies"
-  compatible_runtimes = ["python3.13"]
-  # compatible_architectures = [var.fn_architecture]
+  compatible_runtimes = ["python3.10"]
+  compatible_architectures = ["x86_64"]
 
   filename         = data.local_file.dependencies_layer_zip.filename
   source_code_hash = data.local_file.dependencies_layer_zip.content_base64sha256

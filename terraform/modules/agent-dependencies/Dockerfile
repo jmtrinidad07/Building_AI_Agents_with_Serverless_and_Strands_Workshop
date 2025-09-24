@@ -1,4 +1,4 @@
-FROM public.ecr.aws/sam/build-python3.13
+FROM public.ecr.aws/sam/build-python3.10:latest
 WORKDIR /opt
 COPY build_layer.sh .
 COPY requirements.txt .

@@ -9,8 +9,8 @@ def add_oauth_routes(fastapi_app: FastAPI):
     COGNITO_WELL_KNOWN_ENDPOINT_URL = os.getenv("COGNITO_WELL_KNOWN_URL")
     COGNITO_CLIENT_ID = os.getenv("COGNITO_CLIENT_ID")
     COGNITO_CLIENT_SECRET = os.getenv("COGNITO_CLIENT_SECRET")
-    OAUTH_CALLBACK_URI = "http://localhost:8000/callback"
-    REDIRECT_AFTER_LOGOUT_URL = "http://localhost:8000/chat"
+    OAUTH_CALLBACK_URI = "https://d2jkbzym32bewl.cloudfront.net/proxy/8000/callback"
+    REDIRECT_AFTER_LOGOUT_URL = "https://d2jkbzym32bewl.cloudfront.net/proxy/8000/"
 
     oauth = OAuth()
     oauth.register(
@@ -35,7 +35,7 @@ def add_oauth_routes(fastapi_app: FastAPI):
         req.session["access_token"] = access_token
         req.session["username"] = username
         print(f"username={username} access_token={access_token}")
-        return RedirectResponse(url="/chat")
+        return RedirectResponse(url="/")
 
     @fastapi_app.get("/logout")
     async def logout(req: Request):

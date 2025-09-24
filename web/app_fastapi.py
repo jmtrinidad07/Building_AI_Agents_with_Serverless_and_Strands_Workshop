@@ -99,7 +99,7 @@ async def chat_endpoint(message: str, request: Request):
     try:
         print(f"🔥 User: {username}")
         # Use direct API Gateway URL instead of CloudFront
-        direct_url = "https://05t7fvt7m4.execute-api.us-east-1.amazonaws.com/dev/"
+        direct_url = AGENT_ENDPOINT_URL
         print(f"🔥 Making request to: {direct_url} (bypassing CloudFront)")
         print(f"🔥 Token (first 50 chars): {token[:50]}...")
         print(f"🔥 Full request headers: Authorization: Bearer {token[:20]}...")
