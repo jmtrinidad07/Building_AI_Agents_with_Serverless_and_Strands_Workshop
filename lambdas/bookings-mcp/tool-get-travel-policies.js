@@ -5,7 +5,7 @@ const l = log4js.getLogger();
 
 const TOOL = [
   "get-travel-policies",
-  "This tool returns corporate travel policies. Travel agents must ALWAYS follow this guidance and restrictions.",
+  "Returns corporate travel policies when booking hotels or car rentals.",
   async (ctx) => {
     const startTime = Date.now();
     const userId = ctx.authInfo.user_id;
