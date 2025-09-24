@@ -1,5 +1,6 @@
 from user import User
 import jwt
+import time
 from strands.tools.mcp.mcp_client import MCPClient
 from mcp.client.streamable_http import streamablehttp_client
 import os
@@ -15,27 +16,57 @@ mcp_clients = {}
 
 def get_mcp_tools_for_user(user: User):
     if user.id in mcp_tools and user.id in mcp_clients:
-        l.info(f"existing mcp client/tools found for user.id={user.id}")
+        l.info(f"MCP_CACHE_HIT: user_id={user.id}, tools_count={len(mcp_tools[user.id])}")
         return mcp_tools[user.id]
 
-    l.info(f"mcp client/tools for user.id={user.id} not found. creating.")
-
-    token = jwt.encode({
-        "sub":"travel-agent",
+    l.info(f"MCP_CACHE_MISS: user_id={user.id}, creating new client")
+    
+    # Generate JWT for MCP authentication
+    token_payload = {
+        "sub": "travel-agent",
         "user_id": user.id,
         "user_name": user.name,
-    }, jwt_signature_secret, algorithm="HS256")
-    l.info(token)
+    }
+    token = jwt.encode(token_payload, jwt_signature_secret, algorithm="HS256")
+    l.info(f"MCP_JWT_GENERATED: user_id={user.id}, payload={token_payload}")
 
-    mcp_client = MCPClient(lambda: streamablehttp_client(
-        url=mcp_endpoint,
-        headers={"Authorization": f"Bearer {token}"},
-    ))
-
-    mcp_client.start()
-    tools = mcp_client.list_tools_sync()
-
-    mcp_clients[user.id] = mcp_client
-    mcp_tools[user.id] = tools
-    return mcp_tools[user.id]
+    try:
+        # Create MCP client with timing
+        client_start = time.time()
+        mcp_client = MCPClient(lambda: streamablehttp_client(
+            url=mcp_endpoint,
+            headers={"Authorization": f"Bearer {token}"},
+        ))
+        
+        l.info(f"MCP_CLIENT_CREATED: endpoint={mcp_endpoint}")
+        
+        # Start client connection
+        connection_start = time.time()
+        mcp_client.start()
+        connection_duration = time.time() - connection_start
+        l.info(f"MCP_CONNECTION_ESTABLISHED: duration={connection_duration:.2f}s")
+        
+        # List available tools
+        tools_start = time.time()
+        tools = mcp_client.list_tools_sync()
+        tools_duration = time.time() - tools_start
+        
+        client_total_duration = time.time() - client_start
+        l.info(f"MCP_TOOLS_RETRIEVED: count={len(tools)}, tools_duration={tools_duration:.2f}s, total_duration={client_total_duration:.2f}s")
+        
+        # Log individual tools
+        for i, tool in enumerate(tools):
+            tool_name = getattr(tool, 'name', 'unknown')
+            l.info(f"MCP_TOOL_{i}: name={tool_name}")
+        
+        # Cache for future use
+        mcp_clients[user.id] = mcp_client
+        mcp_tools[user.id] = tools
+        
+        l.info(f"MCP_SETUP_SUCCESS: user_id={user.id}, cached_tools={len(tools)}")
+        return mcp_tools[user.id]
+        
+    except Exception as e:
+        l.error(f"MCP_SETUP_ERROR: user_id={user.id}, error_type={type(e).__name__}, error={str(e)}", exc_info=True)
+        raise
 
